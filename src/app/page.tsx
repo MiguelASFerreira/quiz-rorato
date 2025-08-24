@@ -7,7 +7,6 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <section className="relative overflow-hidden bg-gradient-to-br from-background via-muted/20 to-accent/10 py-20 px-4 min-h-screen flex items-center">
-        <div className="absolute inset-0 bg-[url('/mathematical-formulas-and-geometric-shapes-pattern.png')] opacity-5"></div>
         <div className="relative max-w-4xl mx-auto text-center w-full">
           <Badge variant="secondary" className="mb-6 text-sm font-medium">
             <Calculator className="w-4 h-4 mr-2" />
