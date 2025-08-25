@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { mathThemes } from "@/data/mathThemes";
+import { generateQuestions } from "@/services/quizService";
 
 const formSchema = z.object({
   level: z.enum(["fácil", "médio", "difícil"], "Selecione um nível"),
@@ -52,7 +53,17 @@ export default function CreateRoomPage() {
     },
   });
 
-  function onSubmit(values: FormData) {
+  async function onSubmit(values: FormData) {
+    try {
+      const result = await generateQuestions({
+        level: values.level,
+        theme: values.themes,
+        quantityQuestions: values.quantityQuestions,
+      });
+      
+    } catch (error) {
+      console.error("Erro ao criar a sala:", error);
+    }
     console.log("Valores enviados:", values);
   }
 
@@ -148,7 +159,7 @@ export default function CreateRoomPage() {
             </CardContent>
 
             <CardFooter>
-              <Button type="submit" className="w-full mt-2">
+              <Button type="submit" className="w-full mt-2" disabled={form.formState.isSubmitting}>
                 Criar sala
               </Button>
             </CardFooter>
