@@ -20,7 +20,7 @@ export default function Home() {
             descubra o prazer de aprender matemática.
           </p>
           <div className="flex justify-center">
-            <Link href={"/admin"}>
+            <Link href={"/create-room"}>
               <Button
                 size="lg"
                 className="text-lg px-8 py-6 bg-primary hover:bg-primary/90"
