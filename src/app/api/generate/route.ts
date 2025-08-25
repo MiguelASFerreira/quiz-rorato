@@ -18,7 +18,7 @@ export async function POST(req: Request) {
         text: `
           Crie ${quantityQuestions} perguntas de matemática no nível ${level}, relacionadas ao contexto de uma empresa industrial chamada A.J Rorato, que fabrica pias, tanques, armários de banheiro e de cozinha.
 
-          As perguntas devem abordar os seguintes temas de matemática básica:
+          As perguntas devem abordar os seguintes temas de matemática:
 
           ${theme.join(", ")}
 
@@ -47,6 +47,7 @@ export async function POST(req: Request) {
 
 
           Gere ${quantityQuestions} objetos dentro do array, um para cada pergunta.
+          Garanta que haja pelo menos uma questão de cada tema (${theme.join(", ")}).
 
           Observação:
           Responda **somente** com JSON puro. 
