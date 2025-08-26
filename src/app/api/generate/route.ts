@@ -51,7 +51,7 @@ export async function POST(req: Request) {
 
           Observação:
           Responda **somente** com JSON puro. 
-          Não inclua ${"```json ou explicações extras, apenas o array de objetos."}
+          Não inclua \`\`\`json ou explicações extras, apenas o array de objetos solicitado.
 
         `,
       },

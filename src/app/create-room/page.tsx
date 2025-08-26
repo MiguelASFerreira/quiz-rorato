@@ -1,8 +1,10 @@
 "use client";
 
+import { toast } from "sonner"
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import {
   Form,
   FormControl,
@@ -31,6 +33,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { mathThemes } from "@/data/mathThemes";
 import { generateQuestions } from "@/services/quizService";
+import { useQuiz } from "@/contexts/QuizContext";
 
 const formSchema = z.object({
   level: z.enum(["fácil", "médio", "difícil"], "Selecione um nível"),
@@ -39,32 +42,50 @@ const formSchema = z.object({
     .number()
     .min(3, "Mínimo 3 questão")
     .max(5, "Máximo 5 questões"),
+  timerMinutes: z
+    .number()
+    .min(1, "Mínimo 1 minutos")
+    .max(5, "Máximo 5 minutos"),
 });
 
 type FormData = z.infer<typeof formSchema>;
 
 export default function CreateRoomPage() {
+  const router = useRouter();
+  const { setConfig, setQuestions } = useQuiz();
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       level: "fácil",
       themes: [],
       quantityQuestions: 3,
+      timerMinutes: 1,
     },
   });
 
   async function onSubmit(values: FormData) {
     try {
-      const result = await generateQuestions({
+      setConfig({
+        level: values.level,
+        themes: values.themes,
+        quantityQuestions: values.quantityQuestions,
+        timerMinutes: values.timerMinutes,
+      });
+
+      const questions = await generateQuestions({
         level: values.level,
         theme: values.themes,
         quantityQuestions: values.quantityQuestions,
       });
-      
+
+      setQuestions(questions);
+
+      router.push("/quiz");
     } catch (error) {
+      toast.error("Erro ao criar a sala. Tente novamente.");
       console.error("Erro ao criar a sala:", error);
     }
-    console.log("Valores enviados:", values);
   }
 
   return (
@@ -156,10 +177,35 @@ export default function CreateRoomPage() {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="timerMinutes"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Tempo por pergunta (minutos)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min={1}
+                        max={5}
+                        {...field}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                        placeholder="Ex: 1"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </CardContent>
 
             <CardFooter>
-              <Button type="submit" className="w-full mt-2" disabled={form.formState.isSubmitting}>
+              <Button
+                type="submit"
+                className="w-full mt-2"
+                disabled={form.formState.isSubmitting}
+              >
                 Criar sala
               </Button>
             </CardFooter>
