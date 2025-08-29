@@ -47,7 +47,9 @@ export async function POST(req: Request) {
 
 
           Gere ${quantityQuestions} objetos dentro do array, um para cada pergunta.
-          Garanta que haja pelo menos uma questão de cada tema (${theme.join(", ")}).
+          Garanta que haja pelo menos uma questão de cada tema (${theme.join(
+            ", "
+          )}).
 
           Observação:
           Responda **somente** com JSON puro. 
@@ -59,10 +61,31 @@ export async function POST(req: Request) {
   });
 
   if (!response.text) {
-    return NextResponse.json({ error: "Não foi possível gerar perguntas." }, { status: 500 });
+    return NextResponse.json(
+      { error: "Não foi possível gerar perguntas." },
+      { status: 500 }
+    );
   }
 
-  const questions: Question[] = JSON.parse(response.text);
+  let cleanText = response.text.trim();
+
+  cleanText = cleanText.replace(/^```json\s*/i, "").replace(/```$/i, "");
+
+  const firstBracket = cleanText.indexOf("[");
+  const lastBracket = cleanText.lastIndexOf("]");
+  if (firstBracket !== -1 && lastBracket !== -1) {
+    cleanText = cleanText.slice(firstBracket, lastBracket + 1);
+  }
+
+  let questions: Question[];
+  try {
+    questions = JSON.parse(cleanText);
+  } catch (e) {
+    return NextResponse.json(
+      { error: "Erro ao interpretar JSON", raw: cleanText },
+      { status: 500 }
+    );
+  }
 
   return NextResponse.json({ questions });
 }

@@ -4,7 +4,5 @@ export const mathThemes = [
   "Porcentagem",
   "Média Aritmética",
   "Equações do 1º Grau",
-  "Equações do 2º Grau",
-  "Progressões Aritméticas (PA)",
-  "Progressões Geométricas (PG)",
+  "Matemática Básica",
 ];

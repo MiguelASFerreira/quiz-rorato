@@ -205,6 +205,7 @@ export default function CreateRoomPage() {
                 type="submit"
                 className="w-full mt-2"
                 disabled={form.formState.isSubmitting}
+                isLoading={form.formState.isSubmitting}
               >
                 Criar sala
               </Button>
