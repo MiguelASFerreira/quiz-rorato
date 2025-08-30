@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useReducer, ReactNode } from "react";
-import { QuizData, QuizConfig, Question, UserAnswer } from "@/types/quiz";
+import { QuizData, QuizConfig, Question } from "@/types/quiz";
 
 const initialState: QuizData = {
   config: {
@@ -20,7 +20,6 @@ type QuizAction =
   | { type: "SET_CONFIG"; payload: QuizConfig }
   | { type: "SET_QUESTIONS"; payload: Question[] }
   | { type: "NEXT_QUESTION" }
-  | { type: "PREVIOUS_QUESTION" }
   | {
       type: "SET_ANSWER";
       payload: {
@@ -65,13 +64,6 @@ function quizReducer(state: QuizData, action: QuizAction): QuizData {
         currentQuestionIndex: nextIndex,
       };
 
-    case "PREVIOUS_QUESTION":
-      const prevIndex = Math.max(state.currentQuestionIndex - 1, 0);
-      return {
-        ...state,
-        currentQuestionIndex: prevIndex,
-      };
-
     case "SET_ANSWER":
       const newAnswers = [...state.userAnswers];
       newAnswers[action.payload.questionIndex] = {
@@ -111,7 +103,6 @@ type QuizContextType = {
   setConfig: (config: QuizConfig) => void;
   setQuestions: (questions: Question[]) => void;
   nextQuestion: () => void;
-  previousQuestion: () => void;
   setAnswer: (
     questionIndex: number,
     answer: string,
@@ -124,7 +115,6 @@ type QuizContextType = {
   getProgress: () => { current: number; total: number; percentage: number };
   getScore: () => { correct: number; total: number; percentage: number };
   isLastQuestion: () => boolean;
-  isFirstQuestion: () => boolean;
 };
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -146,10 +136,6 @@ export function QuizProvider({ children }: QuizProviderProps) {
 
   const nextQuestion = () => {
     dispatch({ type: "NEXT_QUESTION" });
-  };
-
-  const previousQuestion = () => {
-    dispatch({ type: "PREVIOUS_QUESTION" });
   };
 
   const setAnswer = (
@@ -208,16 +194,11 @@ export function QuizProvider({ children }: QuizProviderProps) {
     return state.currentQuestionIndex === state.questions.length - 1;
   };
 
-  const isFirstQuestion = () => {
-    return state.currentQuestionIndex === 0;
-  };
-
   const value: QuizContextType = {
     state,
     setConfig,
     setQuestions,
     nextQuestion,
-    previousQuestion,
     setAnswer,
     goToQuestion,
     completeQuiz,
@@ -226,7 +207,6 @@ export function QuizProvider({ children }: QuizProviderProps) {
     getProgress,
     getScore,
     isLastQuestion,
-    isFirstQuestion,
   };
 
   return <QuizContext.Provider value={value}>{children}</QuizContext.Provider>;

@@ -119,7 +119,7 @@ export const TimerComponent = forwardRef<
                   ? "Em andamento"
                   : isTimeUp
                   ? "⏰ Tempo esgotado!"
-                  : "Pausado"}
+                  : "Aguardando início"}
               </div>
             </div>
 

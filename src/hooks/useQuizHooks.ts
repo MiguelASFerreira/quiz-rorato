@@ -2,15 +2,8 @@ import { useQuiz } from "@/contexts/QuizContext";
 import { UserAnswer } from "@/types/quiz";
 
 export function useQuizNavigation() {
-  const {
-    state,
-    nextQuestion,
-    previousQuestion,
-    goToQuestion,
-    isFirstQuestion,
-    isLastQuestion,
-    getProgress,
-  } = useQuiz();
+  const { state, nextQuestion, goToQuestion, isLastQuestion, getProgress } =
+    useQuiz();
 
   const canGoNext = () => {
     const currentAnswer = state.userAnswers[state.currentQuestionIndex];
@@ -30,11 +23,8 @@ export function useQuizNavigation() {
     totalQuestions: state.questions.length,
     progress: getProgress(),
     canGoNext: canGoNext(),
-    canGoPrevious: !isFirstQuestion(),
-    isFirstQuestion: isFirstQuestion(),
     isLastQuestion: isLastQuestion(),
     nextQuestion: goToNextWithValidation,
-    previousQuestion,
     goToQuestion,
   };
 }

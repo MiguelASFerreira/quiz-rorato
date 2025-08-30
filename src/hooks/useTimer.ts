@@ -23,13 +23,6 @@ export function useTimer(initialTimeInMinutes: number = 3) {
     setIsRunning(true);
   };
 
-  const stopTimer = () => {
-    setIsRunning(false);
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-  };
-
   const resetTimer = (newTimeInMinutes?: number) => {
     const newTime = newTimeInMinutes
       ? newTimeInMinutes * 60
@@ -99,7 +92,6 @@ export function useTimer(initialTimeInMinutes: number = 3) {
     totalTime,
     isRunning,
     startTimer,
-    stopTimer,
     resetTimer,
     getTimeSpent,
     formatTime: (seconds?: number) => formatTime(seconds ?? timeLeft),

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import { useQuiz } from "@/contexts/QuizContext";
 import {
   useQuizNavigation,
@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, ArrowRight, Home } from "lucide-react";
+import { ArrowRight, Home } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import TimerComponent, { TimerComponentRef } from "@/components/TimerComponent";
@@ -67,13 +67,6 @@ export default function QuizPage() {
     }
   };
 
-  const handlePrevious = () => {
-    if (answers.currentAnswer) {
-      saveCurrentAnswerWithTime(answers.currentAnswer);
-    }
-    navigation.previousQuestion();
-  };
-
   const handleTimeUp = () => {
     if (answers.currentAnswer) {
       saveCurrentAnswerWithTime(answers.currentAnswer);
@@ -102,7 +95,6 @@ export default function QuizPage() {
           </Link>
           <Badge variant="secondary">Nível: {stats.config.level}</Badge>
         </div>
-
         <div className="mb-6">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm font-medium">
@@ -115,7 +107,6 @@ export default function QuizPage() {
           </div>
           <Progress value={navigation.progress.percentage} className="w-full" />
         </div>
-
         <div className="mb-6">
           <TimerComponent
             timeInMinutes={stats.config.timerMinutes}
@@ -125,7 +116,6 @@ export default function QuizPage() {
             ref={timerRef}
           />
         </div>
-
         {answers.currentQuestion && (
           <Card className="mb-6">
             <CardHeader>
@@ -152,36 +142,7 @@ export default function QuizPage() {
             </CardContent>
           </Card>
         )}
-
-        <div className="flex justify-between items-center">
-          <Button
-            variant="outline"
-            onClick={handlePrevious}
-            disabled={!navigation.canGoPrevious}
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Anterior
-          </Button>
-
-          {/* <div className="flex gap-2">
-            {Array.from({ length: stats.totalQuestions }, (_, index) => (
-              <Badge
-                key={index}
-                variant={
-                  index === navigation.currentQuestionIndex
-                    ? "default"
-                    : answers.allAnswers[index]?.answer
-                    ? "secondary"
-                    : "outline"
-                }
-                className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer"
-                onClick={() => navigation.goToQuestion(index)}
-              >
-                {index + 1}
-              </Badge>
-            ))}
-          </div> */}
-
+        <div className="flex justify-end items-center">
           <Button
             onClick={handleNext}
             disabled={!answers.hasAnsweredCurrentQuestion}
@@ -191,8 +152,7 @@ export default function QuizPage() {
               <ArrowRight className="w-4 h-4 ml-2" />
             )}
           </Button>
-        </div>
-
+        </div>{" "}
         <Card className="mt-6 bg-muted/50">
           <CardHeader>
             <CardTitle className="text-sm">Progresso</CardTitle>
