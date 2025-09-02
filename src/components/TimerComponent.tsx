@@ -13,6 +13,7 @@ interface TimerComponentProps {
   onTimeChange?: (timeSpentSeconds: number) => void;
   autoStart?: boolean;
   className?: string;
+  onAutoAdvance?: () => void;
 }
 
 export interface TimerComponentRef {
@@ -25,7 +26,14 @@ export const TimerComponent = forwardRef<
   TimerComponentProps
 >(
   (
-    { timeInMinutes, onTimeUp, onTimeChange, autoStart = true, className },
+    {
+      timeInMinutes,
+      onTimeUp,
+      onTimeChange,
+      autoStart = true,
+      className,
+      onAutoAdvance,
+    },
     ref
   ) => {
     const timeUpCalledRef = useRef(false);
@@ -58,11 +66,20 @@ export const TimerComponent = forwardRef<
     }, [timeInMinutes]);
 
     useEffect(() => {
-      if (isTimeUp && onTimeUp && !timeUpCalledRef.current) {
+      if (isTimeUp && !timeUpCalledRef.current) {
         timeUpCalledRef.current = true;
-        onTimeUp();
+
+        if (onTimeUp) {
+          onTimeUp();
+        }
+
+        if (onAutoAdvance) {
+          setTimeout(() => {
+            onAutoAdvance();
+          }, 100);
+        }
       }
-    }, [isTimeUp, onTimeUp, timeLeft]);
+    }, [isTimeUp, onTimeUp, onAutoAdvance, timeLeft]);
 
     useEffect(() => {
       if (timeLeft > 0 && timeUpCalledRef.current) {

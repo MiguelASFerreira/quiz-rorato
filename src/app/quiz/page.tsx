@@ -18,7 +18,12 @@ import TimerComponent, { TimerComponentRef } from "@/components/TimerComponent";
 
 export default function QuizPage() {
   const router = useRouter();
-  const { completeQuiz, setAnswer, state } = useQuiz();
+  const {
+    completeQuiz,
+    setAnswer,
+    state,
+    nextQuestion: directNextQuestion,
+  } = useQuiz();
   const timerRef = useRef<TimerComponentRef>(null);
 
   const navigation = useQuizNavigation();
@@ -74,12 +79,14 @@ export default function QuizPage() {
       const timeSpent = timerRef.current?.getTimeSpent() || 0;
       setAnswer(state.currentQuestionIndex, "", timeSpent);
     }
+  };
 
+  const handleAutoAdvance = () => {
     if (navigation.isLastQuestion) {
       completeQuiz();
       router.push("/quiz/result");
     } else {
-      navigation.nextQuestion();
+      directNextQuestion();
     }
   };
 
@@ -111,6 +118,7 @@ export default function QuizPage() {
           <TimerComponent
             timeInMinutes={stats.config.timerMinutes}
             onTimeUp={handleTimeUp}
+            onAutoAdvance={handleAutoAdvance}
             autoStart={true}
             key={navigation.currentQuestionIndex}
             ref={timerRef}
